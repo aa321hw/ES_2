@@ -4,12 +4,12 @@ int SIGNALBPIN = 2;
 int analog_input = 4;
 int digital_input = 12;
 
+//Define variables used
 int error_code = 0;
 int average_analogue_in = 0;
 int inputvalue = 0;
 int analogvals[4] = {0,0,0,0}; 
-int signalbdelay = 0.05 * 10 * 2;
-
+int signalbdelay = 0.05 * 10;
 int digitalval = 0;
 int count = 0;
 int timer = 0;
@@ -17,7 +17,7 @@ int frequency = 0;
 
 void setup() {
   
-  // put your setup code here, to run once:
+  //Pins setup
   Serial.begin(9600);
   pinMode(SIGNALAPIN, OUTPUT);
   pinMode(SIGNALBPIN,OUTPUT);
@@ -26,6 +26,7 @@ void setup() {
 
 }
 
+//Cyclic execute of the tasks
 void loop() {
 
   timer++;
@@ -48,6 +49,7 @@ void Task1(){
   
 }
 
+//Read digital input
 void Task2(){
 
   digitalval = digitalRead(digital_input);
@@ -59,6 +61,7 @@ void Task3(){
   
 }
 
+//Read the analog input and save them into a size 4 array to calculate average
 void Task4(){
 
   analogvals[count] = analogRead(analog_input);
@@ -69,6 +72,7 @@ void Task4(){
   
 }
 
+//Calculate the average of the analog input
 void Task5(){
   int sum = 0;
   for(int i = 0; i < 4;i++){
@@ -84,7 +88,8 @@ void Task6(){
     __asm__ __volatile__ ("nop");
   }
 }
-
+//To make sure that the method works properly, the value used is 1000 however the half of the maximum value is 2047.5
+//Check there is no error
 void Task7(){
 
   if (average_analogue_in > 1000){
@@ -95,10 +100,10 @@ void Task7(){
     error_code = 0;
   }
 
-  Serial.print(error_code);
     
 }
 
+//Turn LED on or off depending on error
 void Task8(){
 
   if (error_code == 1){
@@ -111,6 +116,7 @@ void Task8(){
   
 }
 
+//Print information obtained from the previous tasks
 void Task9(){
   
   Serial.print("Digital value: ");
